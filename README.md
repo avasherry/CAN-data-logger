@@ -24,7 +24,7 @@ index = ['logfile2021-01-19_07-00-34', 'logfile2021-01-19_07-02-26']
 ```
 Output:
 ```
-.xlsx [file](https://drive.google.com) that outputs a summary of all the fault/warning/diagnostic matrices for each CANlog
+.xlsx [link to Google!](http://google.com) that outputs a summary of all the fault/warning/diagnostic matrices for each CANlog
 ```
 
 ### decodeCAN.py
