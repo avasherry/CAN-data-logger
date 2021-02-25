@@ -20,7 +20,7 @@ Input:
 ```
 dbc_filename = '/Users/asherry/Documents/rideable-firmware-master/api/can_dbc/cosmo.dbc'
 asc_filename = '/Users/asherry/Desktop/TestRideData/REL/Second_Distance_Track/REL13_100km/'
-index = ['logfile2021-01-19_07-00-34', 'logfile2021-01-19_07-02-26']
+index = ['logfile2021-01-19_07-00-34.asc', 'logfile2021-01-19_07-02-26.asc']
 ```
 Output:
 ```
