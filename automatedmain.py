@@ -28,7 +28,7 @@ from pandas import ExcelWriter
 
 def summaryFWD():
     dbc_filename = '/Users/asherry/Documents/rideable-firmware-master/api/can_dbc/cosmo.dbc'
-    asc_filename = '/Users/asherry/Desktop/TestRideData/REL/Second_Distance_Track/REL6_150km/'
+    asc_folder = '/Users/asherry/Desktop/TestRideData/REL/Second_Distance_Track/REL6_150km/'
     db = cantools.database.load_file(dbc_filename)
     # index = ['logfile2021-01-19_07-00-34.asc', 'logfile2021-01-19_07-02-26.asc', 'logfile2021-01-19_07-02-48.asc']
     index = ['logfile2021-01-21_09-28-56.asc', 'logfile2021-01-24_03-07-46.asc']
@@ -48,7 +48,7 @@ def summaryFWD():
     # Fill data array for each log
     for a in range(0, len(index)):
 
-        can_logs = LyftCAN.ascToDataframe(asc_filename + index[a], dbc_filename, filteredMsgID)
+        can_logs = LyftCAN.ascToDataframe(asc_folder + index[a], dbc_filename, filteredMsgID)
         can_log_by_signal = can_logs['canlogs_by_signal']
         d = []
 
@@ -62,6 +62,8 @@ def summaryFWD():
                 for y in range(0, len(log)):
                     count += log.Object[y]
             d.append(count)
+
+
         data.append(d)
 
     df = pandas.DataFrame(data, index, columns)
