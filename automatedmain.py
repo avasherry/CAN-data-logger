@@ -28,25 +28,33 @@ from pandas import ExcelWriter
 
 def summaryFWD():
     dbc_filename = '/Users/asherry/Documents/rideable-firmware-master/api/can_dbc/cosmo.dbc'
-    asc_filename = '/Users/asherry/Desktop/TestRideData/REL/Second_Distance_Track/REL13_8km/'
-    index = ['logfile2021-01-19_07-00-34.asc', 'logfile2021-01-19_07-02-26.asc', 'logfile2021-01-19_07-02-48.asc']
-    # index = ['logfile2021-01-19_07-02-48.asc']
+    asc_filename = '/Users/asherry/Desktop/TestRideData/REL/Second_Distance_Track/REL6_150km/'
+    db = cantools.database.load_file(dbc_filename)
+    # index = ['logfile2021-01-19_07-00-34.asc', 'logfile2021-01-19_07-02-26.asc', 'logfile2021-01-19_07-02-48.asc']
+    index = ['logfile2021-01-21_09-28-56.asc', 'logfile2021-01-24_03-07-46.asc']
+    # index = ['logfile2021-01-25_02-35-28.asc', 'logfile2021-01-24_08-38-50.asc', 'logfile2021-01-24_03-03-54.asc', 'logfile2021-01-21_07-46-10.asc']
 
     data = []
     columns = []
 
+    filteredSignals = ["MC_DiagnosticMatrix", "MC_FaultMatrix", "MC_WarningMatrix", "BMS_DiagnosticMatrix",
+                       "BMS_FaultMatrix", "BMS_WarningMatrix"]
+    filteredMsgID = set()
+
+    for signal in filteredSignals:  ## fill filteredMsgID with hex values of signals
+        msg = db.get_message_by_name(signal)
+        filteredMsgID.add(msg.frame_id)
+
     # Fill data array for each log
     for a in range(0, len(index)):
 
-        can_logs = LyftCAN.ascToDataframe(asc_filename + index[a], dbc_filename)
+        can_logs = LyftCAN.ascToDataframe(asc_filename + index[a], dbc_filename, filteredMsgID)
         can_log_by_signal = can_logs['canlogs_by_signal']
         d = []
 
         if a == 0: ## if this is the first log in the array
             for signal in can_log_by_signal:
-                s = signal.split("_")  ## "MC_f032_TorqueInputRationality" --> ["MC", "f032", "TorqueInputRationality"]
-                if s[1][0] in ['w', 'f', 'd']:  ## is the signal in a fault/warning/diagnostic matrix (ex. MC_w001)
-                    columns.append(signal) ## fill the columns array with signal names
+                columns.append(signal) ## fill the columns array with signal names
         for signal in columns:
             count = 0
             log = can_log_by_signal[signal]
@@ -54,8 +62,6 @@ def summaryFWD():
                 for y in range(0, len(log)):
                     count += log.Object[y]
             d.append(count)
-
-
         data.append(d)
 
     df = pandas.DataFrame(data, index, columns)
